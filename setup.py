@@ -28,7 +28,7 @@ setup(
     name="miqsel",
     packages=find_packages(include=["miqsel"]),
     url="https://github.com/digitronik/miqsel",
-    version="0.1.0",
+    version="1.0",
     license="GPLv3",
     zip_safe=False,
 )
