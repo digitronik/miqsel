@@ -1,0 +1,202 @@
+import os
+import time
+
+import click
+import docker
+import yaml
+
+
+class Connection(object):
+    def __init__(self):
+        self.client = None
+        self.container = None
+        self.conf = None
+
+
+connection = click.make_pass_decorator(Connection, ensure=True)
+home = os.environ["HOME"]
+
+
+@click.group()
+@connection
+def cli(connection):
+    try:
+        connection.client = docker.from_env()
+    except Exception:
+        click.echo("Fail to connect docker")
+        exit(1)
+    conf = Configuration()
+    connection.conf = conf.read()
+    proj_dir = connection.conf.get("project_dir")
+
+    if proj_dir == "None":
+        if not os.path.isdir("conf"):
+            click.echo("Please run command from project directory or set project directory with config")
+            exit(0)
+
+
+class Configuration(object):
+    """Configure miqsel"""
+
+    def __init__(self):
+        self.conf_file = "{home}/.config/miqsel/conf.yml".format(home=home)
+        dir_path = os.path.dirname(self.conf_file)
+
+        if not os.path.isdir(dir_path):
+            os.makedirs(dir_path)
+
+        if not os.path.isfile(self.conf_file):
+            raw_cfg = {
+                "project_dir": None,
+                "container_name": "miq_sel",
+                "image": "cfmeqe/cfme_sel_stable:latest",
+                "vnc_port": 5999,
+                "server_port": 4444,
+            }
+            self.write(raw_cfg)
+
+    def read(self):
+        with open(self.conf_file, "r") as ymlfile:
+            return yaml.load(ymlfile)
+
+    def write(self, cfg):
+        with open(self.conf_file, "w") as ymlfile:
+            return yaml.dump(cfg, ymlfile, default_flow_style=False)
+
+
+def set_env(hostname=None, browser=None):
+    conf = Configuration().read()
+    proj_dir = conf.get("project_dir")
+    port = conf.get("server_port")
+
+    if proj_dir != "None":
+        path = os.path.join(proj_dir, "conf/env.local.yaml")
+    else:
+        path = "conf/env.local.yaml"
+
+    raw_cfg = {
+        "browser": {
+            "webdriver": "Remote",
+            "webdriver_options": {
+                "desired_capabilities": {
+                    "browserName": "chrome",
+                    "platform": "LINUX",
+                    "unexpectedAlertBehaviour": "ignore",
+                }
+            },
+        }
+    }
+
+    try:
+        with open(path, "r") as ymlfile:
+            env_yaml = yaml.load(ymlfile)
+    except FileNotFoundError:
+        env_yaml = {}
+
+    env_yaml = env_yaml if env_yaml else raw_cfg
+    if hostname:
+        url = "http://{host}:{port}/wd/hub".format(host=hostname, port=port)
+        env_yaml["browser"]["webdriver_options"]["command_executor"] = url
+    if browser:
+        env_yaml["browser"]["webdriver_options"]["desired_capabilities"]["browserName"] = browser
+    with open(path, "w") as ymlfile:
+        yaml.dump(env_yaml, ymlfile, default_flow_style=False)
+
+
+@cli.command(help="Configure Miq Selenium webdriver")
+def config():
+    conf = Configuration()
+    cfg = conf.read()
+
+    cfg["project_dir"] = click.prompt("Miq project working dir", default=cfg.get("project_dir"))
+    cfg["container_name"] = click.prompt("Container name", default=cfg.get("container_name"))
+    cfg["image"] = click.prompt("Docker selenium driver image", default=cfg.get("image"))
+    cfg["vnc_port"] = click.prompt("VNC running on port?", default=cfg.get("vnc_port"))
+    cfg["server_port"] = click.prompt(
+        "Selenium server running on port?", default=cfg["server_port"]
+    )
+    conf.write(cfg=cfg)
+    click.echo("Configuration saved successfully...")
+
+
+@connection
+def get_container(connection):
+    try:
+        return connection.client.containers.get(connection.conf.get("container_name"))
+    except docker.errors.NotFound:
+        return None
+
+
+@cli.command(help="Miq Selenium Server Hostname")
+def hostname():
+    container = get_container()
+    host = container.attrs["NetworkSettings"]["IPAddress"] if container else None
+    click.echo(host)
+    return host
+
+
+@cli.command(help="VNC viewer")
+@click.option("-u", "--url", default=None, help="Server url with port <hostname:port>")
+def viewer(url):
+    os.system("vncviewer {url}&".format(url=url))
+
+
+@cli.command(help="Start Miq Selenium Server")
+@connection
+@click.pass_context
+def start(ctx, connection):
+    container = get_container()
+    img = connection.conf.get("image")
+    name = connection.conf.get("container_name")
+
+    if not container:
+        connection.client.containers.run(img, name=name, detach=True, auto_remove=True)
+        click.echo("{} container started".format(name))
+        time.sleep(10)
+
+        t0 = time.time()
+        while True:
+            host = ctx.invoke(hostname)
+            if host:
+                url = "{hostname}:{port}".format(
+                    hostname=host, port=connection.conf.get("vnc_port")
+                )
+                break
+            elif time.time() > (t0 + 20):
+                click.echo("Timeout: Fail to get hostname. Check for selenium server status")
+                exit(0)
+
+        set_env(hostname=host)
+        ctx.invoke(viewer, url=url)
+
+    elif getattr(container, "status", None) == "exited":
+        container.start()
+        click.echo("{} container started".format(name))
+    else:
+        click.echo("Container in {} state".format(container.status))
+
+
+@cli.command(help="Stop Miq Selenium Server")
+def stop():
+    container = get_container()
+
+    if getattr(container, "status", None) == "running":
+        container.stop()
+    else:
+        click.echo("Nothing to stop")
+
+
+@cli.command(help="Status of Miq Selenium Server")
+def status():
+    container = get_container()
+    if container:
+        click.echo(container.status)
+    else:
+        click.echo("Not running...")
+
+
+@cli.command(help="Set Browser")
+@click.option("-c", "--chrome", "browser", flag_value="chrome", default=True, help="Chrome")
+@click.option("-f", "--firefox", "browser", flag_value="firefox", help="Firefox")
+def browser(browser):
+    set_env(browser=browser)
