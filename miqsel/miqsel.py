@@ -61,7 +61,7 @@ class Configuration(object):
 
     def write(self, cfg):
         with open(self.conf_file, "w") as ymlfile:
-            return yaml.dump(cfg, ymlfile, default_flow_style=False)
+            return yaml.safe_dump(cfg, ymlfile, default_flow_style=False)
 
 
 def set_env(hostname=None, browser=None):
@@ -100,7 +100,7 @@ def set_env(hostname=None, browser=None):
     if browser:
         env_yaml["browser"]["webdriver_options"]["desired_capabilities"]["browserName"] = browser
     with open(path, "w") as ymlfile:
-        yaml.dump(env_yaml, ymlfile, default_flow_style=False)
+        yaml.safe_dump(env_yaml, ymlfile, default_flow_style=False)
 
 
 @cli.command(help="Configure Miq Selenium webdriver")
