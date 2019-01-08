@@ -21,7 +21,7 @@ setup(
     entry_points={"console_scripts": ["miqsel=miqsel.miqsel:cli"]},
     install_requires=install_requirements,
     long_description=readme,
-    long_description_content_type='text/markdown',
+    long_description_content_type="text/markdown",
     include_package_data=True,
     setup_requires=setup_requirements,
     keywords="miqsel",

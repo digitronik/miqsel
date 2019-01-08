@@ -31,7 +31,9 @@ def cli(connection):
 
     if proj_dir == "":
         if not os.path.isdir("conf"):
-            click.echo("Please run command from project directory or set project directory with config")
+            click.echo(
+                "Please run command from project directory or set project directory with config"
+            )
             exit(0)
 
 
