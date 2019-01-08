@@ -29,7 +29,7 @@ def cli(connection):
     connection.conf = conf.read()
     proj_dir = connection.conf.get("project_dir")
 
-    if proj_dir == "None":
+    if proj_dir == "":
         if not os.path.isdir("conf"):
             click.echo("Please run command from project directory or set project directory with config")
             exit(0)
@@ -47,7 +47,7 @@ class Configuration(object):
 
         if not os.path.isfile(self.conf_file):
             raw_cfg = {
-                "project_dir": None,
+                "project_dir": "",
                 "container_name": "miq_sel",
                 "image": "cfmeqe/cfme_sel_stable:latest",
                 "vnc_port": 5999,
@@ -69,7 +69,7 @@ def set_env(hostname=None, browser=None):
     proj_dir = conf.get("project_dir")
     port = conf.get("server_port")
 
-    if proj_dir != "None":
+    if proj_dir != "":
         path = os.path.join(proj_dir, "conf/env.local.yaml")
     else:
         path = "conf/env.local.yaml"
@@ -90,7 +90,7 @@ def set_env(hostname=None, browser=None):
     try:
         with open(path, "r") as ymlfile:
             env_yaml = yaml.load(ymlfile)
-    except FileNotFoundError:
+    except IOError:
         env_yaml = {}
 
     env_yaml = env_yaml if env_yaml else raw_cfg
