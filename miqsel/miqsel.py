@@ -80,10 +80,13 @@ def set_env(hostname=None, browser=None):
         "browser": {
             "webdriver": "Remote",
             "webdriver_options": {
+                "keep_alive": True,
                 "desired_capabilities": {
                     "browserName": "chrome",
                     "platform": "LINUX",
                     "unexpectedAlertBehaviour": "ignore",
+                    "acceptInsecureCerts": True,
+                    "acceptSslCerts": True,
                 }
             },
         }
@@ -91,7 +94,7 @@ def set_env(hostname=None, browser=None):
 
     try:
         with open(path, "r") as ymlfile:
-            env_yaml = yaml.load(ymlfile)
+            env_yaml = yaml.safe_load(ymlfile)
     except IOError:
         env_yaml = {}
 
