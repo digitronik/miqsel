@@ -12,17 +12,17 @@ and give me `vnc` access and solve my problems.
 ## Prerequisite:
 1. **Docker**:
 
-    I think you have a `docker` environment already setup. if not you can follow. 
+    For setting `docker` environment follow below steps:
 
-    - [fedora](https://developer.fedoraproject.org/tools/docker/docker-installation.html)
+    - [Fedora](https://developer.fedoraproject.org/tools/docker/docker-installation.html)
     
-        * set repo
+        * Set Repository:
         ```
         sudo dnf -y install dnf-plugins-core
         sudo dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
         ```
     
-        * Install
+        * Install below packages:
     
         ```
         sudo dnf -y install docker-ce
@@ -30,19 +30,22 @@ and give me `vnc` access and solve my problems.
         sudo systemctl enable docker
         ```
         
-        * Non root-user
+        * Run docker with non-root User:
         ```
-        sudo usermod -aG docker <your-user-name>
+        sudo usermod -aG docker <non-root-user>
         ```
     
-    - [ubuntu](https://docs.docker.com/install/linux/docker-ce/ubuntu/) and [others](https://docs.docker.com/install/)
+    - [Ubuntu](https://docs.docker.com/install/linux/docker-ce/ubuntu/) and [others](https://docs.docker.com/install/)
 
-2. **TigerVNC**:
+2. **TigerVNC Versions(based on various Distro's)**:
     - Fedora:
         ```
         sudo dnf install tigervnc
         ```
-    - [Other:](http://tigervnc.bphinz.com/nightly/)
+    - Other Distro's:
+		```
+		[TigerVNC link for other Distro's](http://tigervnc.bphinz.com/nightly/)
+		```
 
 
 ## Installation:
@@ -75,5 +78,5 @@ Commands:
     ```
     cd `<path>/integration_tests`
     miqsel config
-    # fallow options
+    # follow options
     ```
