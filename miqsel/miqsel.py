@@ -146,6 +146,14 @@ def viewer(url):
     os.system("vncviewer {url}&".format(url=url))
 
 
+@cli.command(help="VNC and Command Executor URL's")
+@click.option("-u", "--urls", default=None, help="Gives you URLs")
+def urls(url, hostname, port):
+    click.echo("Tests can be view on this URL '{}' ".format(url))
+    vnc_url = "http://{host}:{port}".format(host=hostname, port=port)
+    click.echo("VNC server URL {}".format(vnc_url))
+
+
 @cli.command(help="Start Miq Selenium Server")
 @connection
 @click.pass_context
