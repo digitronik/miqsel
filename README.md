@@ -1,12 +1,11 @@
 # Miq Selenium Server
 
 This is a simple script to make my life easy.
-As I want to run `selenium server` `locally` but don't want to use `wharf`.
-I don't want to check docker `ip's` and `ports`;
-I want to overwrite to my `env.ymal`.
-I want to select my `browser` with a single command.
-Simple command line application should spin selenium docker container
-and give me `vnc` access and solve my problems.
+I want to run `selenium server` `locally` but don't want to use full `wharf`.
+I want to check running container `ip's` and `ports` also point them in `env.ymal`.
+I want to select `browser` with a single command.
+
+Simple command line application to spin `selenium docker container` and provide `vnc` access.
  
 
 ## Prerequisite:
@@ -42,10 +41,8 @@ and give me `vnc` access and solve my problems.
         ```
         sudo dnf install tigervnc
         ```
-    - Other Distro's:
-		```
-		[TigerVNC link for other Distro's](http://tigervnc.bphinz.com/nightly/)
-		```
+    - [TigerVNC link for other Distro's](http://tigervnc.bphinz.com/nightly/)
+
 
 
 ## Installation:
@@ -71,6 +68,8 @@ Commands:
   start     Start Miq Selenium Server
   status    Status of Miq Selenium Server
   stop      Stop Miq Selenium Server
+  urls      VNC and Command Executor URL's
+  viewer    VNC viewer
 ```
 - **Note**: If the project directory `not set` then you need to run commands from `integration_tests` directory. 
 
