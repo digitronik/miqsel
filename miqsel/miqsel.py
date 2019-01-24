@@ -146,6 +146,20 @@ def viewer(url):
     os.system("vncviewer {url}&".format(url=url))
 
 
+@cli.command(help="VNC and Command Executor URL's")
+@click.pass_context
+def urls(ctx):
+    host = ctx.invoke(hostname)
+    conf = Configuration().read()
+
+    click.echo(
+        "Command Executor: http://{host}:{port}/wd/hub".format(
+            host=host, port=conf.get("server_port")
+        )
+    )
+    click.echo("VNC: {host}:{port}".format(host=host, port=conf.get("vnc_port")))
+
+
 @cli.command(help="Start Miq Selenium Server")
 @connection
 @click.pass_context
