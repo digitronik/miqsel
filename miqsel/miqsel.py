@@ -132,14 +132,6 @@ def get_container(connection):
         return None
 
 
-@connection
-def get_image(connection):
-    try:
-        return connection.client.images.get(connection.conf.get("image"))
-    except docker.errors.NotFound:
-        return None
-
-
 @cli.command(help="Miq Selenium Server Hostname")
 def hostname():
     container = get_container()
@@ -175,10 +167,11 @@ def start(ctx, connection):
     container = get_container()
     img = connection.conf.get("image")
     name = connection.conf.get("container_name")
-    
+
     if not container:
-        if not get_image():
-            print("Pulling docker images...Please wait...It will take some time!")
+        if not connection.client.images.list():
+            click.echo("Pulling docker images...")
+            click.echo("It will take time; Please wait for some time...")
         connection.client.containers.run(img, name=name, detach=True, auto_remove=True)
         click.echo("{} container started".format(name))
         time.sleep(10)
