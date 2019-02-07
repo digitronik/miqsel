@@ -143,7 +143,18 @@ def hostname():
 
 @cli.command(help="VNC viewer")
 @click.option("-u", "--url", default=None, help="Server url with port <hostname:port>")
-def viewer(url):
+@connection
+@click.pass_context
+def viewer(ctx, connection, url):
+    if not url:
+        host = ctx.invoke(hostname)
+        if host:
+            url = "{hostname}:{port}".format(
+                hostname=host, port=connection.conf.get("vnc_port")
+            )
+        else:
+            click.echo("Selenium server not running...")
+            exit(0)
     os.system("vncviewer {url}&".format(url=url))
 
 
@@ -172,22 +183,19 @@ def start(ctx, connection):
     if not container:
         connection.client.containers.run(img, name=name, detach=True, auto_remove=True)
         click.echo("{} container started".format(name))
-        time.sleep(10)
+        time.sleep(5)
 
         t0 = time.time()
         while True:
             host = ctx.invoke(hostname)
             if host:
-                url = "{hostname}:{port}".format(
-                    hostname=host, port=connection.conf.get("vnc_port")
-                )
                 break
             elif time.time() > (t0 + 20):
                 click.echo("Timeout: Fail to get hostname. Check for selenium server status")
                 exit(0)
 
         set_env(hostname=host)
-        ctx.invoke(viewer, url=url)
+        ctx.invoke(viewer)
 
     elif getattr(container, "status", None) == "exited":
         container.start()
