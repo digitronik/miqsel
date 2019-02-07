@@ -169,12 +169,16 @@ def start(ctx, connection):
     name = connection.conf.get("container_name")
 
     if not container:
-        if not connection.client.images.list():
+        try:
+            connection.client.images.get(img)
+        except docker.errors.ImageNotFound:
             click.echo("Pulling docker images...")
-            click.echo("It will take time; Please wait for some time...")
+            click.echo("It will take some time; Please wait...")
+            connection.client.containers.run(img, name=name, detach=True, auto_remove=True)
+
         connection.client.containers.run(img, name=name, detach=True, auto_remove=True)
         click.echo("{} container started".format(name))
-        time.sleep(10)
+        time.sleep(5)
 
         t0 = time.time()
         while True:
