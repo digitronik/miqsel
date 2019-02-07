@@ -17,6 +17,7 @@ connection = click.make_pass_decorator(Connection, ensure=True)
 home = os.environ["HOME"]
 
 
+@click.version_option()
 @click.group()
 @connection
 def cli(connection):
