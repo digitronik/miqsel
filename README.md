@@ -1,12 +1,7 @@
 # Miq Selenium Server
 
-This is a simple script to make my life easy.
-I want to run `selenium server` `locally` but don't want to use full `wharf`.
-I want to check running container `ip's` and `ports` also point them in `env.ymal`.
-I want to select `browser` with a single command.
-
 Simple command line application to spin `selenium docker container` and provide `vnc` access.
- 
+
 
 ## Prerequisite:
 1. **Docker**:
@@ -59,7 +54,8 @@ or
 Usage: miqsel [OPTIONS] COMMAND [ARGS]...
 
 Options:
-  --help  Show this message and exit.
+  --version  Show the version and exit.
+  --help     Show this message and exit.
 
 Commands:
   browser   Set Browser
