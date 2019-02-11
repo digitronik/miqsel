@@ -88,7 +88,7 @@ def set_env(hostname=None, browser=None):
                     "unexpectedAlertBehaviour": "ignore",
                     "acceptInsecureCerts": True,
                     "acceptSslCerts": True,
-                }
+                },
             },
         }
     }
@@ -149,9 +149,7 @@ def viewer(ctx, connection, url):
     if not url:
         host = ctx.invoke(hostname)
         if host:
-            url = "{hostname}:{port}".format(
-                hostname=host, port=connection.conf.get("vnc_port")
-            )
+            url = "{hostname}:{port}".format(hostname=host, port=connection.conf.get("vnc_port"))
         else:
             click.echo("Selenium server not running...")
             exit(0)
@@ -181,12 +179,9 @@ def start(ctx, connection):
     name = connection.conf.get("container_name")
 
     if not container:
-        try:
-            connection.client.images.get(img)
-        except docker.errors.ImageNotFound:
+        if not connection.client.images.list(name=img):
             click.echo("Pulling docker images...")
             click.echo("It will take some time; Please wait...")
-            connection.client.containers.run(img, name=name, detach=True, auto_remove=True)
 
         connection.client.containers.run(img, name=name, detach=True, auto_remove=True)
         click.echo("{} container started".format(name))
