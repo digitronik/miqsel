@@ -26,6 +26,7 @@ Simple command line application to spin `selenium docker container` and provide 
         
         * Run docker with non-root User:
         ```
+        sudo groupadd docker
         sudo usermod -aG docker <non-root-user>
         ```
     
