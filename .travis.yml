@@ -6,12 +6,15 @@ services:
   - docker
 
 python:
--   "3.5"
 -   "3.6"
 -   "3.7"
 
 install:
-  - pip install tox-travis
-script: tox
+  - pip install black flake8 pytest pytest-cov
+  - pip install .
+script:
+  - flake8 --max-line-length 100 setup.py miqsel/* tests/*
+  - black -l 100 setup.py miqsel/* tests/*
+  - pytest tests -v --cov miqsel
 after_failure:
--   git diff
+  - git diff
