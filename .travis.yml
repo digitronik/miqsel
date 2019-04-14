@@ -1,0 +1,17 @@
+language: python
+dist: xenial
+sudo: required
+
+services:
+  - docker
+
+python:
+-   "3.5"
+-   "3.6"
+-   "3.7"
+
+install:
+  - pip install tox-travis
+script: tox
+after_failure:
+-   git diff
