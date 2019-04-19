@@ -1,22 +1,6 @@
 import os
-import subprocess
 
-
-def miqsel_cmd(cmd):
-    """
-    Runs a miqsel shell command, and returns the output, err, returncode
-    """
-    ret = subprocess.Popen(
-        cmd,
-        shell=True,
-        stdin=subprocess.PIPE,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        close_fds=True,
-    )
-    out, err = ret.communicate()
-    returncode = ret.returncode
-    return out.decode(), err.decode(), returncode
+from tests import miqsel_cmd
 
 
 def test_miqsel_help():
@@ -37,7 +21,7 @@ def test_miqsel_unconfigured():
     )
 
 
-def test_miqsel_configured(config):
+def test_miqsel_configured(ensure_stopped):
     out, err, returncode = miqsel_cmd("miqsel status")
     assert returncode == 0
     assert out.strip() == "Not running..."
