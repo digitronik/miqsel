@@ -22,3 +22,14 @@ def test_miqsel_help():
     """Check Status of miqsel"""
     out, err, returncode = miqsel_cmd("miqsel")
     assert returncode == 0
+    assert "Usage: miqsel [OPTIONS] COMMAND [ARGS]" in out
+
+
+def test_miqsel_unconfigured():
+    """Check Status of unconfigured miqsel"""
+    out, err, returncode = miqsel_cmd("miqsel status")
+    assert returncode == 0
+    assert (
+        out.strip()
+        == "Please run command from project directory or set project directory with config"
+    )
