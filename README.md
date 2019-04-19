@@ -5,7 +5,7 @@
 <a href="https://pypi.org/project/miqsel"><img alt="Python Versions"
 src="https://img.shields.io/pypi/pyversions/miqsel.svg?style=flat"></a>
 <a href="https://travis-ci.org/digitronik/miqsel"><img alt="Build Status"
-src="https://travis-ci.org/digitronik/miqsel.svg?branch=master"></a>
+src="https://travis-ci.com/digitronik/miqsel.svg?branch=master"></a>
 <a href="https://github.com/digitronik/miqsel/blob/master/LICENSE"><img alt="License: GPLV3"
 src="https://img.shields.io/pypi/l/miqsel.svg?version=latest"></a>
 <a href="https://pypi.org/project/miqsel/#history"><img alt="PyPI version"
