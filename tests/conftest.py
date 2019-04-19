@@ -2,6 +2,7 @@ import os
 from subprocess import PIPE, Popen
 
 import pytest
+from tests import miqsel_cmd
 
 
 @pytest.fixture(scope="module")
@@ -16,3 +17,17 @@ def config():
     yield
     if os.path.isdir("conf"):
         os.rmdir("conf")
+
+
+@pytest.fixture(scope="module")
+def ensure_stopped(config):
+    out, _, _ = miqsel_cmd("miqsel status")
+    if out.strip() == "running":
+        miqsel_cmd("miqsel stop")
+
+
+@pytest.fixture(scope="module")
+def ensure_running(config):
+    out, _, _ = miqsel_cmd("miqsel status")
+    if out.strip() != "running":
+        miqsel_cmd("miqsel start")

@@ -21,7 +21,7 @@ def test_miqsel_unconfigured():
     )
 
 
-def test_miqsel_configured(config):
+def test_miqsel_configured(ensure_stopped):
     out, err, returncode = miqsel_cmd("miqsel status")
     assert returncode == 0
     assert out.strip() == "Not running..."
