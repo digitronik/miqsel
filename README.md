@@ -1,6 +1,22 @@
-# Miq Selenium Server
+<h1 align="center"> miqsel</h2>
+<h3 align="center">Miq Selenium Server</h3>
 
-Simple command line application to spin `selenium docker container` and provide `vnc` access.
+<p align="center">
+<a href="https://pypi.org/project/miqsel"><img alt="Python Versions"
+src="https://img.shields.io/pypi/pyversions/miqsel.svg?style=flat"></a>
+<a href="https://travis-ci.org/digitronik/miqsel"><img alt="Build Status"
+src="https://travis-ci.org/digitronik/miqsel.svg?branch=master"></a>
+<a href="https://github.com/digitronik/miqsel/blob/master/LICENSE"><img alt="License: GPLV3"
+src="https://img.shields.io/pypi/l/miqsel.svg?version=latest"></a>
+<a href="https://pypi.org/project/miqsel/#history"><img alt="PyPI version"
+src="https://badge.fury.io/py/miqsel.svg"></a>
+<a href="https://pepy.tech/project/miqsel"><img alt="Downloads"
+src="https://pepy.tech/badge/miqsel"></a>
+<a href="https://pypi.org/project/black"><img alt="Code style: black"
+src="https://img.shields.io/badge/code%20style-black-000000.svg"></a>
+</p>
+
+Simple command line application to spin [`selenium docker container`](https://hub.docker.com/r/cfmeqe/cfme_sel_stable) and provide `vnc` access.
 
 
 ## Prerequisite:
