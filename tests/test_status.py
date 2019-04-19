@@ -1,3 +1,4 @@
+import os
 import subprocess
 
 
@@ -27,9 +28,16 @@ def test_miqsel_help():
 
 def test_miqsel_unconfigured():
     """Check Status of unconfigured miqsel"""
+    os.system("rm -rf ~/.config/miqsel/conf.yml")
     out, err, returncode = miqsel_cmd("miqsel status")
     assert returncode == 0
     assert (
         out.strip()
         == "Please run command from project directory or set project directory with config"
     )
+
+
+def test_miqsel_configured(config):
+    out, err, returncode = miqsel_cmd("miqsel status")
+    assert returncode == 0
+    assert out.strip() == "Not running..."
