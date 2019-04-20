@@ -1,6 +1,7 @@
 import click
 
 from miqsel.config import config
+from miqsel.env import appliance, browser
 from miqsel.server import start, status, stop, urls, viewer
 
 
@@ -21,6 +22,9 @@ main.add_command(stop)
 main.add_command(urls)
 main.add_command(viewer)
 
+# Env management command
+main.add_command(appliance)
+main.add_command(browser)
 
 if __name__ == "__main__":
     main()
