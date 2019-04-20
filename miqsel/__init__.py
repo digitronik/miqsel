@@ -2,13 +2,13 @@ import click
 
 from miqsel.config import config
 from miqsel.env import appliance, browser
-from miqsel.server import start, status, stop, urls, viewer
+from miqsel.server import executor, start, status, stop, viewer, vnc
 
 
 @click.version_option()
 @click.group()
 def main():
-    """Entry point for miqsel"""
+    """Miq Selenium Server"""
     pass
 
 
@@ -19,8 +19,9 @@ main.add_command(config)
 main.add_command(status)
 main.add_command(start)
 main.add_command(stop)
-main.add_command(urls)
 main.add_command(viewer)
+main.add_command(vnc)
+main.add_command(executor)
 
 # Env management command
 main.add_command(appliance)

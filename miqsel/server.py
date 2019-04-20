@@ -1,5 +1,5 @@
-import os
 import time
+from subprocess import PIPE, Popen
 
 import click
 import docker
@@ -124,16 +124,19 @@ def start(ctx):
     """start command"""
 
     miq = Server()
-    try:
-        miq.start()
-        click.echo("Selenium Server started")
-    except Exception:
-        click.echo("Fail to start Selenium Server")
-        raise
-    if miq.status == "running":
+    if miq.status == "stopped":
+        try:
+            miq.start()
+            click.echo("Selenium Server started")
+        except Exception:
+            click.echo("Fail to start Selenium Server")
+            raise
+
         env = LocalEnv()
         env.executor = miq.executor
         ctx.invoke(viewer)
+    else:
+        click.echo("Server in running state")
 
 
 @click.command(help="Stop Selenium Server")
@@ -148,14 +151,24 @@ def stop():
         click.echo("Server not running...")
 
 
-@click.command(help="VNC and Command Executor URL's")
-def urls():
-    """urls command"""
+@click.command(help="Selenium executor URL")
+def executor():
+    """executor url command"""
 
     miq = Server()
     if miq.status == "running":
-        click.echo("Executor: {}".format(miq.executor))
-        click.echo("VNC: {}".format(miq.vnc))
+        click.echo(miq.executor)
+    else:
+        click.echo("Server not running...")
+
+
+@click.command(help="VNC URL")
+def vnc():
+    """vnc url command"""
+
+    miq = Server()
+    if miq.status == "running":
+        click.echo(miq.vnc)
     else:
         click.echo("Server not running...")
 
@@ -169,7 +182,10 @@ def viewer(url):
     """
 
     url = url if url else Server().vnc
-    if not url:
-        click.echo("Server not running...")
+    if url:
+        try:
+            Popen(["vncviewer", url], stdout=PIPE)
+        except FileNotFoundError:
+            click.echo("Need vnc viewer... Check README")
     else:
-        os.system("vncviewer {url}&".format(url=url))
+        click.echo("Server not running...")

@@ -28,12 +28,10 @@ def config():
     conf = Configuration()
     cfg = conf.read()
 
-    cfg["container"]["project_dir"] = click.prompt(
+    cfg["container"]["project"] = click.prompt(
         "Miq project working dir", default=cfg["container"]["project"]
     )
-    cfg["container"]["container_name"] = click.prompt(
-        "Container name", default=cfg["container"]["name"]
-    )
+    cfg["container"]["name"] = click.prompt("Container name", default=cfg["container"]["name"])
     cfg["container"]["image"] = click.prompt(
         "Docker selenium driver image", default=cfg["container"]["image"]
     )

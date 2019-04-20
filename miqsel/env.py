@@ -74,7 +74,7 @@ class LocalEnv(object):
 
         :return: return current appliance
         """
-        return self.env["env"]["appliances"]["- hostname"]
+        return self.env["appliances"][0]["hostname"]
 
     @appliance.setter
     def appliance(self, value):
@@ -84,7 +84,7 @@ class LocalEnv(object):
         """
         if self.appliance != value:
             cfg = self.env
-            cfg["env"]["appliances"]["- hostname"] = value
+            cfg["appliances"][0]["hostname"] = value
             self.write(cfg)
 
     @property
@@ -93,7 +93,7 @@ class LocalEnv(object):
 
         :return: executor url
         """
-        return self.env["env"]["browser"]["webdriver_options"]["command_executor"]
+        return self.env["browser"]["webdriver_options"]["command_executor"]
 
     @executor.setter
     def executor(self, value):
@@ -103,15 +103,13 @@ class LocalEnv(object):
         """
         if self.browser != value:
             cfg = self.env
-            cfg["env"]["browser"]["webdriver_options"]["command_executor"] = value
+            cfg["browser"]["webdriver_options"]["command_executor"] = value
             self.write(cfg)
 
     @property
     def browser(self):
         """Browser from env"""
-        return self.env["env"]["browser"]["webdriver_options"]["desired_capabilities"][
-            "browserName"
-        ]
+        return self.env["browser"]["webdriver_options"]["desired_capabilities"]["browserName"]
 
     @browser.setter
     def browser(self, value):
@@ -121,9 +119,7 @@ class LocalEnv(object):
         """
         if self.browser != value:
             cfg = self.env
-            cfg["env"]["browser"]["webdriver_options"]["desired_capabilities"][
-                "browserName"
-            ] = value
+            cfg["browser"]["webdriver_options"]["desired_capabilities"]["browserName"] = value
             self.write(cfg)
 
 
