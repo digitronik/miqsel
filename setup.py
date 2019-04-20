@@ -18,7 +18,7 @@ setup(
         "Programming Language :: Python :: 3.7",
     ],
     description="Miq Selenium Server for local testing",
-    entry_points={"console_scripts": ["miqsel=miqsel.miqsel:cli"]},
+    entry_points={"console_scripts": ["miqsel=miqsel:main"]},
     install_requires=install_requirements,
     long_description=readme,
     long_description_content_type="text/markdown",
