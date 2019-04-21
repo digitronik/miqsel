@@ -1,4 +1,8 @@
-from setuptools import setup, find_packages
+import sys
+
+from setuptools import find_packages, setup
+
+assert sys.version_info >= (3, 6, 0), "miqsel requires Python 3.6+"
 
 
 with open("README.md") as readme_file:
@@ -13,9 +17,11 @@ setup(
     author_email="nik.digitronik@live.com",
     classifiers=[
         "Natural Language :: English",
-        "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3 :: Only",
+        "Topic :: Software Development :: Quality Assurance",
+        "Topic :: Software Development :: Testing",
     ],
     description="Miq Selenium Server for local testing",
     entry_points={"console_scripts": ["miqsel=miqsel.miqsel:cli"]},
@@ -24,6 +30,7 @@ setup(
     long_description_content_type="text/markdown",
     include_package_data=True,
     setup_requires=setup_requirements,
+    python_requires=">=3.6",
     keywords="miqsel",
     name="miqsel",
     packages=find_packages(include=["miqsel"]),
