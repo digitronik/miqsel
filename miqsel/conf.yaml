@@ -1,0 +1,20 @@
+container:
+  image: cfmeqe/cfme_sel_stable:latest
+  name: selenium_container
+  project: null
+  server_port: 4444
+  vnc_port: 5999
+miq:
+  appliances:
+    - hostname: null
+  browser:
+    webdriver: Remote
+    webdriver_options:
+      command_executor: null
+      desired_capabilities:
+        acceptInsecureCerts: true
+        acceptSslCerts: true
+        browserName: chrome
+        platform: LINUX
+        unexpectedAlertBehaviour: ignore
+      keep_alive: true
