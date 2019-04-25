@@ -24,21 +24,24 @@ class LocalEnv(object):
     def env_file(self):
         """ Environment file
 
-        :return: environment file
+        :return: environment file if not None
         """
-        return (
-            os.path.join(self.project, "conf", "env.local.yaml")
-            if self.project
-            else os.path.join("conf", "env.local.yaml")
-        )
+        if os.path.isdir("conf"):
+            # First check miqsel running from project dir
+            return os.path.join("conf", "env.local.yaml")
+        elif self.project:
+            # Second check miqsel project path set or not
+            return os.path.join(self.project, "conf", "env.local.yaml")
+        else:
+            return os.path.join("tmp", "env.local.yaml")
 
     @property
     def in_env(self):
         """ Check env.local.yaml exist or not
-
         :return: return bool
         """
-        return os.path.isdir(os.path.dirname(self.env_file))
+        proj_dir = os.path.dirname(self.env_file)
+        return os.path.isdir(proj_dir) and proj_dir == "conf"
 
     def read(self):
         """Read Environment file
