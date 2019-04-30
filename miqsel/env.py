@@ -1,7 +1,7 @@
 import os
 
 import click
-import yaml
+from ruamel.yaml import safe_load, safe_dump
 
 from miqsel.config import Configuration
 
@@ -37,11 +37,11 @@ class LocalEnv(object):
 
     @property
     def in_env(self):
-        """ Check env.local.yaml exist or not
+        """ Check we are in env or not.
         :return: return bool
         """
         proj_dir = os.path.dirname(self.env_file)
-        return os.path.isdir(proj_dir) and proj_dir == "conf"
+        return os.path.isdir(proj_dir)
 
     def read(self):
         """Read Environment file
@@ -49,7 +49,7 @@ class LocalEnv(object):
         :return: dict
         """
         with open(self.env_file, "r") as ymlfile:
-            return yaml.load(ymlfile)
+            return safe_load(ymlfile)
 
     def write(self, cfg):
         """ Write Environment file
@@ -58,7 +58,7 @@ class LocalEnv(object):
         """
         if self.in_env:
             with open(self.env_file, "w") as ymlfile:
-                return yaml.safe_dump(cfg, ymlfile, default_flow_style=False)
+                return safe_dump(cfg, ymlfile, default_flow_style=False)
         else:
             click.echo(
                 "Project directory need set or run from Project directory; 'env.yaml' not updated"
