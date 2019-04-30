@@ -1,7 +1,7 @@
 import os
 
 import click
-import yaml
+from ruamel.yaml import safe_load, safe_dump
 
 
 class Configuration(object):
@@ -14,11 +14,11 @@ class Configuration(object):
 
     def read(self):
         with open(self.conf_file, "r") as ymlfile:
-            return yaml.load(ymlfile)
+            return safe_load(ymlfile)
 
     def write(self, cfg):
         with open(self.conf_file, "w") as ymlfile:
-            return yaml.safe_dump(cfg, ymlfile, default_flow_style=False)
+            return safe_dump(cfg, ymlfile, default_flow_style=False)
 
 
 @click.command(help="Configure Miq Selenium Server")
