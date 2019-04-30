@@ -144,7 +144,7 @@ def browser(browser):
         click.echo(env.browser)
 
 
-@click.command(help="Appliance")
+@click.command(help="Set Appliance")
 @click.option("-s", "--set", "app", default=None, help="Set Appliance")
 def appliance(app):
     """Appliance command
