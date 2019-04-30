@@ -37,11 +37,11 @@ class LocalEnv(object):
 
     @property
     def in_env(self):
-        """ Check env.local.yaml exist or not
+        """ Check we are in env or not.
         :return: return bool
         """
         proj_dir = os.path.dirname(self.env_file)
-        return os.path.isdir(proj_dir) and proj_dir == "conf"
+        return os.path.isdir(proj_dir)
 
     def read(self):
         """Read Environment file
