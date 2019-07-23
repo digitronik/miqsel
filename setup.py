@@ -31,11 +31,11 @@ setup(
     include_package_data=True,
     setup_requires=setup_requirements,
     python_requires=">=3.6",
+    use_scm_version=True,
     keywords="miqsel",
     name="miqsel",
     packages=find_packages(include=["miqsel"]),
     url="https://github.com/digitronik/miqsel",
-    version="2.0",
     license="GPLv3",
     zip_safe=False,
 )
