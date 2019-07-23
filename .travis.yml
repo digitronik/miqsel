@@ -1,20 +1,26 @@
 language: python
 dist: xenial
 sudo: required
-
 services:
-  - docker
-
+- docker
 python:
--   "3.6"
--   "3.7"
-
+- '3.6'
+- '3.7'
 install:
-  - pip install black flake8 pytest pytest-cov
-  - pip install .
+- pip install black flake8 pytest pytest-cov
+- pip install .
 script:
-  - flake8 --max-line-length 100 setup.py miqsel/*.py tests/*.py
-  - black -l 100 setup.py miqsel/*.py tests/*.py
-  - pytest tests -v --cov miqsel
+- flake8 --max-line-length 100 setup.py miqsel/*.py tests/*.py
+- black -l 100 setup.py miqsel/*.py tests/*.py
+- pytest tests -v --cov miqsel
 after_failure:
-  - git diff
+- git diff
+deploy:
+  provider: pypi
+  user: digitronik
+  password:
+    secure: hekDkucV034/iIvY/kXqS9xvqDKrKqY6ROKJWNfrpFpWt1xRT+zPhsNLVIA2WUbaLnRwL2FkxBOxibnVlBXBaRl9oukB4EQoXsMbK4efn7KxwVP9DimD8J7/XQyq5APh9PRdfOvnnfwt8HutllmwhttpVcEZlMAdtJWWXaxEyUqrwXjRUJIh6fXFCan/82lelNtQbJKcD41C11fGvMSzvvBhHcaMqwQYOFeXyTfsVVl51Nypnb6EQA/JFFEqN8DHDl6t9nWd9kI29bOoiDHDIS9T67MkuK2yLdBWHQAedC8n2oO2Uc2/NoiQkME6FlzmRfiFMp5pOw99WkKCdpwwUG5n4sVqmOLQ6H3d40sHXyjp0G4tyN9J37TPkjPSIWH9F+AqVQHkpxn0Mewb590cLOySAC1zph04tqbD4VQDIK/EsKFYzT6AhKxaOIHECz0Q1pef93CyULkQ6WWqBKABcuEHmm23GVQ54J8YyZRmdrNDBdZ3lkHekuiifkP0m2NwTQvC16Z9XpV59YJK6/VodxQKk6th0X8fIBRVcehKKnLIO6Umps5eViQYrktjV96FFuy/6C9VR69F5ccgGs5jWBUwDqvWnd0TrwPJB5euaeTMKVDFnhueEQ5tchf2nolCLDKpvxp5qMt6Pjk/mWJU89UnilkZzIvqF++RT6rKQvc=
+  on:
+    tags: true
+    distributions: sdist bdist_wheel
+    repo: digitronik/miqsel
