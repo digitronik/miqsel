@@ -4,6 +4,7 @@ container:
   project: null
   server_port: 4444
   vnc_port: 5999
+  data_dir: None
 miq:
   appliances:
     - hostname: null

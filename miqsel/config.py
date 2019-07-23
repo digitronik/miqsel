@@ -29,7 +29,7 @@ def config():
     cfg = conf.read()
 
     cfg["container"]["project"] = click.prompt(
-        "Miq project working dir", default=cfg["container"]["project"]
+        "Miq project working directory", default=cfg["container"]["project"]
     )
     cfg["container"]["name"] = click.prompt("Container name", default=cfg["container"]["name"])
     cfg["container"]["image"] = click.prompt(
@@ -40,6 +40,9 @@ def config():
     )
     cfg["container"]["server_port"] = click.prompt(
         "Selenium server running on port?", default=cfg["container"]["server_port"]
+    )
+    cfg["container"]["data_dir"] = click.prompt(
+        "Testing data mount to directory '/var/tmp'", default=cfg["container"]["data_dir"]
     )
     conf.write(cfg=cfg)
     click.echo("Configuration saved successfully...")

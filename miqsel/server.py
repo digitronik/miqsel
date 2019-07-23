@@ -64,18 +64,23 @@ class Server(object):
             else None
         )
 
-    def start(self):
+    def start(self, **kwargs):
         """Start selenium container"""
 
         img = self.cfg["container"]["image"]
         name = self.cfg["container"]["name"]
+        mount_dir = self.cfg["container"]["data_dir"]
+
+        if mount_dir != "None":
+            kwargs.update({"volumes": {mount_dir: {"bind": "/var/tmp", "mode": "ro"}}})
 
         if not self.container:
             if not self.client.images.list(name=img):
                 click.echo("Pulling docker images...")
                 click.echo("It will take some time; Please wait...")
 
-            self.client.containers.run(img, name=name, detach=True, auto_remove=True)
+            self.client.containers.run(img, name=name, detach=True, auto_remove=True, **kwargs)
+
             time.sleep(5)
 
             t0 = time.time()
