@@ -11,5 +11,5 @@ jobs:
     - uses: actions/checkout@v1
     - name: check virtualization
       run: |
-        apt -y install cpu-checker
+        sudo apt-get install cpu-checker
         kvm-ok
