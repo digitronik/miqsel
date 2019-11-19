@@ -12,4 +12,4 @@ jobs:
     - name: check virtualization
       run: |
         sudo apt-get install cpu-checker
-        kvm-ok
+        sudo kvm-ok
