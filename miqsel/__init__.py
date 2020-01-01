@@ -1,8 +1,14 @@
 import click
 
 from miqsel.config import config
-from miqsel.env import appliance, browser
-from miqsel.server import executor, start, status, stop, viewer, vnc
+from miqsel.env import appliance
+from miqsel.env import browser
+from miqsel.server import executor
+from miqsel.server import start
+from miqsel.server import status
+from miqsel.server import stop
+from miqsel.server import viewer
+from miqsel.server import vnc
 
 
 @click.version_option()

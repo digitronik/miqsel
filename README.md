@@ -25,27 +25,27 @@ Simple command line application to spin [selenium docker container](https://hub.
     For setting `docker` environment follow below steps:
 
     - [Fedora](https://developer.fedoraproject.org/tools/docker/docker-installation.html)
-    
+
         * Set Repository:
         ```
         sudo dnf -y install dnf-plugins-core
         sudo dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
         ```
-    
+
         * Install below packages:
-    
+
         ```
         sudo dnf -y install docker-ce
         sudo systemctl start docker
         sudo systemctl enable docker
         ```
-        
+
         * Run docker with non-root User:
         ```
         sudo groupadd docker
         sudo usermod -aG docker <non-root-user>
         ```
-    
+
     - [Ubuntu](https://docs.docker.com/install/linux/docker-ce/ubuntu/) and [others](https://docs.docker.com/install/)
 
 2. **TigerVNC Viewer**:
@@ -109,11 +109,11 @@ The start will set command executor in `env.local.yaml` and provide `vnc` access
     ```shell
     ❯❯❯ miqsel start
     Selenium Server started
-    
+
     TigerVNC Viewer 64-bit v1.9.0
-    
+
     ❯❯❯ miqsel stop
-    
+
     Sun Apr 28 12:29:02 2019
      CConn:       End of stream
     Selenium Server stopped
@@ -123,7 +123,7 @@ The start will set command executor in `env.local.yaml` and provide `vnc` access
 Check current appliance or set new.
     ```shell
     ❯❯❯ miqsel appliance
-    
+
     ❯❯❯ miqsel appliance -s 192.168.1.1
     Appliance set to 192.168.1.1
     ❯❯❯ miqsel appliance
@@ -142,7 +142,7 @@ Check current browser or set other.
     ```
 
 - **Viewer**:
-Take `vnc` access of selenium server. At the start of selenium server, vnc viewer will be `invoked` automatically. 
+Take `vnc` access of selenium server. At the start of selenium server, vnc viewer will be `invoked` automatically.
 If the `status` is `running` and the `viewer` is `close` then viewer command will help to re-open vnc session.
 
     ```shell
