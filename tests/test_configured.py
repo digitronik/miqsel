@@ -14,7 +14,7 @@ DATA = {
 def test_miqsel(state, proj_dir, ensure_stopped):
     """Check start and stop of unconfigured miqsel but run from project"""
 
-    cmd = "miqsel {}".format(state)
+    cmd = f"miqsel {state}"
     out, _, returncode = miqsel_cmd(cmd)
     assert returncode == 0
     assert DATA[state]["msg"] in out
@@ -46,9 +46,9 @@ def test_appliance(proj_dir, ensure_stopped):
 
     # with appliance set
     app = "192.168.1.1"
-    out, _, returncode = miqsel_cmd("miqsel appliance -s {}".format(app))
+    out, _, returncode = miqsel_cmd(f"miqsel appliance -s {app}")
     assert returncode == 0
-    assert out.strip() == "Appliance set to {}".format(app)
+    assert out.strip() == f"Appliance set to {app}"
     out, _, returncode = miqsel_cmd("miqsel appliance")
     assert out.strip() == app
 

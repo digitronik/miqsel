@@ -139,7 +139,7 @@ def browser(browser):
     env = LocalEnv()
 
     if browser:
-        click.echo("Browser set to {}".format(browser))
+        click.echo(f"Browser set to {browser}")
         env.browser = browser
     else:
         click.echo(env.browser)
@@ -156,7 +156,7 @@ def appliance(app):
     env = LocalEnv()
 
     if app:
-        click.echo("Appliance set to {}".format(app))
+        click.echo(f"Appliance set to {app}")
         env.appliance = app
     else:
         click.echo(env.appliance)
