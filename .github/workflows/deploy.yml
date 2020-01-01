@@ -10,7 +10,6 @@ on:
 jobs:
   build-and-publish:
     name: Build and publish miqsel distributions to PyPI
-    needs: tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout to master
