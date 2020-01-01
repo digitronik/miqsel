@@ -20,7 +20,7 @@ def test_miqsel_help():
 def test_miqsel_status(state, ensure_stopped):
     """Check Status of unconfigured miqsel"""
 
-    cmd = "miqsel {}".format(state)
+    cmd = f"miqsel {state}"
     miqsel_cmd(cmd)
     out, _, returncode = miqsel_cmd("miqsel status")
     assert returncode == 0
@@ -30,7 +30,7 @@ def test_miqsel_status(state, ensure_stopped):
 @pytest.mark.parametrize("state", DATA)
 def test_miqsel(state, ensure_stopped):
     """Check start and stop of unconfigured miqsel"""
-    cmd = "miqsel {}".format(state)
+    cmd = f"miqsel {state}"
     out, _, returncode = miqsel_cmd(cmd)
     assert returncode == 0
 

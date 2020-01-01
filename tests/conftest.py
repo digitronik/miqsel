@@ -14,7 +14,7 @@ def config():
     if not os.path.isdir("conf"):
         os.mkdir("conf")
     proc = Popen(["miqsel", "config"], stdin=PIPE, stdout=PIPE)
-    input = str.encode("{}\n\n\n\n\n".format(os.getcwd()))
+    input = str.encode(f"{os.getcwd()}\n\n\n\n\n")
     proc.communicate(input=input)
     yield
     if os.path.isdir("conf"):

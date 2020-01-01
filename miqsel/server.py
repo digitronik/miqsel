@@ -45,9 +45,7 @@ class Server(object):
         """
 
         return (
-            "http://{host}:{port}/wd/hub".format(
-                host=self.hostname, port=self.cfg["container"]["server_port"]
-            )
+            f"http://{self.hostname}:{self.cfg['container']['server_port']}/wd/hub"
             if self.hostname
             else None
         )
@@ -59,11 +57,7 @@ class Server(object):
         :return: If container running return vnc url else None
         """
 
-        return (
-            "{host}:{port}".format(host=self.hostname, port=self.cfg["container"]["vnc_port"])
-            if self.hostname
-            else None
-        )
+        return f"{self.hostname}:{self.cfg['container']['vnc_port']}" if self.hostname else None
 
     def start(self, **kwargs):
         """Start selenium container"""
