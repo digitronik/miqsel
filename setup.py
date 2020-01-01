@@ -1,6 +1,7 @@
 import sys
 
-from setuptools import find_packages, setup
+from setuptools import find_packages
+from setuptools import setup
 
 assert sys.version_info >= (3, 6, 0), "miqsel requires Python 3.6+"
 

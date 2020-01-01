@@ -1,5 +1,6 @@
 import time
-from subprocess import PIPE, Popen
+from subprocess import PIPE
+from subprocess import Popen
 
 import click
 import docker

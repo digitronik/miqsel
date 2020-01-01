@@ -1,7 +1,8 @@
 import os
 
 import click
-from ruamel.yaml import safe_load, safe_dump
+from ruamel.yaml import safe_dump
+from ruamel.yaml import safe_load
 
 from miqsel.config import Configuration
 

@@ -1,6 +1,7 @@
 import os
 import shutil
-from subprocess import PIPE, Popen
+from subprocess import PIPE
+from subprocess import Popen
 
 import pytest
 
