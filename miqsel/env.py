@@ -30,7 +30,7 @@ class LocalEnv(object):
         if os.path.isdir("conf"):
             # First check miqsel running from project dir
             return os.path.join("conf", "env.local.yaml")
-        elif self.project:
+        elif self.project != "None":
             # Second check miqsel project path set or not
             return os.path.join(self.project, "conf", "env.local.yaml")
         else:

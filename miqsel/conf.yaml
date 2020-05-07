@@ -1,13 +1,16 @@
 container:
-  image: cfmeqe/cfme_sel_stable:latest
-  name: selenium_container
-  project: null
-  server_port: 4444
-  vnc_port: 5999
+  client: auto
   data_dir: None
+  image: quay.io/redhatqe/selenium-standalone
+  name: selenium_container
+  network: None
+  project: None
+  server_port: 4444
+  viewer: auto
+  vnc_port: 5999
 miq:
   appliances:
-    - hostname: null
+  - hostname: null
   browser:
     webdriver: Remote
     webdriver_options:
