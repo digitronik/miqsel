@@ -10,6 +10,7 @@ on:
 jobs:
   build-and-publish:
     name: Build and publish miqsel distributions to PyPI
+    if: startsWith(github.event.ref, 'refs/tags')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout to master
@@ -18,7 +19,7 @@ jobs:
       - name: Setup python
         uses: actions/setup-python@v1
         with:
-          python-version: '3.7'
+          python-version: '3.8'
           architecture: 'x64'
 
       - name: Build Package
