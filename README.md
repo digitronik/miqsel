@@ -1,4 +1,4 @@
-<h1 align="center"> miqsel</h2>
+<h1 align="center"> miqsel</h1>
 <h3 align="center">Miq Selenium Server</h3>
 
 <p align="center">
@@ -16,46 +16,26 @@ src="https://pepy.tech/badge/miqsel"></a>
 src="https://img.shields.io/badge/code%20style-black-000000.svg"></a>
 </p>
 
-Simple command line application to spin [selenium docker container](https://hub.docker.com/r/cfmeqe/cfme_sel_stable) and provide `vnc` access.
+Simple command line application to spin [selenium container](http://quay.io/redhatqe/selenium-standalone) and provide `vnc` access.
 
 
-## Prerequisite:
-1. **Docker**:
+### Prerequisite:
+1. **Podman/Docker**:
 
-    For setting `docker` environment follow below steps:
+    Make sure `podman` or `docker` running on your system.
+    - [Podman Installation](https://podman.io/getting-started/installation.html)
+    - [Docker Installation](https://docs.docker.com/engine/install/)
 
-    - [Fedora](https://developer.fedoraproject.org/tools/docker/docker-installation.html)
+2. **VNC Viewer**:
 
-        * Set Repository:
-        ```
-        sudo dnf -y install dnf-plugins-core
-        sudo dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
-        ```
-
-        * Install below packages:
-
-        ```
-        sudo dnf -y install docker-ce
-        sudo systemctl start docker
-        sudo systemctl enable docker
-        ```
-
-        * Run docker with non-root User:
-        ```
-        sudo groupadd docker
-        sudo usermod -aG docker <non-root-user>
-        ```
-
-    - [Ubuntu](https://docs.docker.com/install/linux/docker-ce/ubuntu/) and [others](https://docs.docker.com/install/)
-
-2. **TigerVNC Viewer**:
+    You can choose any vnc viewer but most of user used _tigervnc_.
     - Fedora:
         ```
         sudo dnf install tigervnc
         ```
     - [TigerVNC link for other Distro's](http://tigervnc.bphinz.com/nightly/)
 
-## Installation:
+### Installation:
 ```bash
 pip install miqsel --user
 ```

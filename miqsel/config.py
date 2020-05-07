@@ -21,6 +21,11 @@ class Configuration(object):
         with open(self.conf_file, "w") as ymlfile:
             return safe_dump(cfg, ymlfile, default_flow_style=False)
 
+    @property
+    def container(self):
+        cfg = self.read()
+        return cfg["container"]
+
 
 @click.command(help="Configure Miq Selenium Server")
 def config():
@@ -32,9 +37,12 @@ def config():
     cfg["container"]["project"] = click.prompt(
         "Miq project working directory", default=cfg["container"]["project"]
     )
+    cfg["container"]["client"] = click.prompt(
+        "Container Engine [podman/docker]", default=cfg["container"]["client"]
+    )
     cfg["container"]["name"] = click.prompt("Container name", default=cfg["container"]["name"])
     cfg["container"]["image"] = click.prompt(
-        "Docker selenium driver image", default=cfg["container"]["image"]
+        "Selenium container image", default=cfg["container"]["image"]
     )
     cfg["container"]["vnc_port"] = click.prompt(
         "VNC running on port?", default=cfg["container"]["vnc_port"]
@@ -42,8 +50,11 @@ def config():
     cfg["container"]["server_port"] = click.prompt(
         "Selenium server running on port?", default=cfg["container"]["server_port"]
     )
+    cfg["container"]["network"] = click.prompt(
+        "Container network", default=cfg["container"]["network"]
+    )
     cfg["container"]["data_dir"] = click.prompt(
-        "Testing data mount to directory '/var/tmp'", default=cfg["container"]["data_dir"]
+        "Testing data mount to directory '/data'", default=cfg["container"]["data_dir"]
     )
     conf.write(cfg=cfg)
     click.echo("Configuration saved successfully...")

@@ -1,41 +1,48 @@
+import shutil
+import subprocess
 import time
-from subprocess import PIPE
-from subprocess import Popen
 
 import click
-import docker
 
 from miqsel.config import Configuration
 from miqsel.env import LocalEnv
 
+CLIENTS = ["podman", "docker"]
+VNC_VIEWERS = ["vncviewer", "vinagre", "xdg-open"]
 
-class Server(object):
+
+class SeleniumContainer(object):
     """Selenium Server Management"""
 
-    def __init__(self):
-        self.client = docker.from_env(version="auto")
-        self.cfg = Configuration().read()
+    def __init__(
+        self, image=None, name=None, server_port=None, vnc_port=None, data_dir=None, network=None
+    ):
+        self.cfg = Configuration().container
+        self.image = image or self.cfg["image"]
+        self.name = name or self.cfg["name"]
+        self.server_port = server_port or self.cfg["server_port"]
+        self.vnc_port = vnc_port or self.cfg["vnc_port"]
+        self.data_dir = data_dir or self.cfg["data_dir"]
+        self.network = network or self.cfg["network"]
 
     @property
-    def container(self):
-        """
-        Get running selenium container
-        :return: if container running return container object else None
-        """
+    def client(self):
+        _client = self.cfg["client"]
 
-        try:
-            return self.client.containers.get(self.cfg["container"]["name"])
-        except docker.errors.NotFound:
-            return None
+        if _client == "auto":
+            try:
+                _client = next(c for c in CLIENTS if shutil.which(c))
+            except StopIteration:
+                click.echo(f"No container client found on machine. Install one of {CLIENTS}")
+        if shutil.which(_client):
+            return _client
+        else:
+            click.echo(f"Container client {_client} not found")
 
     @property
-    def hostname(self):
-        """
-        Get ip allocated to container
-        :return: If container running return ip else None
-        """
-
-        return self.container.attrs["NetworkSettings"]["IPAddress"] if self.container else None
+    def is_running(self):
+        cmd = subprocess.run([self.client, "ps"], stdout=subprocess.PIPE)
+        return self.name in cmd.stdout.decode()
 
     @property
     def executor(self):
@@ -44,11 +51,7 @@ class Server(object):
         :return: If container running return executor url else None
         """
 
-        return (
-            f"http://{self.hostname}:{self.cfg['container']['server_port']}/wd/hub"
-            if self.hostname
-            else None
-        )
+        return f"http://localhost:{self.server_port}/wd/hub"
 
     @property
     def vnc(self):
@@ -57,45 +60,40 @@ class Server(object):
         :return: If container running return vnc url else None
         """
 
-        return f"{self.hostname}:{self.cfg['container']['vnc_port']}" if self.hostname else None
+        return f"localhost:{self.vnc_port}"
 
     def start(self, **kwargs):
         """Start selenium container"""
-
-        img = self.cfg["container"]["image"]
-        name = self.cfg["container"]["name"]
-        mount_dir = self.cfg["container"]["data_dir"]
-
-        if mount_dir != "None":
-            kwargs.update({"volumes": {mount_dir: {"bind": "/var/tmp", "mode": "ro"}}})
-
-        if not self.container:
-            if not self.client.images.list(name=img):
-                click.echo("Pulling docker images...")
-                click.echo("It will take some time; Please wait...")
-
-            self.client.containers.run(img, name=name, detach=True, auto_remove=True, **kwargs)
-
-            time.sleep(5)
-
-            t0 = time.time()
-            while True:
-                if self.hostname:
-                    break
-                elif time.time() > (t0 + 30):
-                    click.echo("Timeout: Fail to get hostname. Check for selenium server status")
-                    exit(0)
-
-        elif getattr(self.container, "status", None) == "exited":
-            self.container.start()
-        else:
-            click.echo("Need to check container status...")
+        if not self.is_running:
+            cmd = [
+                self.client,
+                "run",
+                "-d",
+                "--rm",
+                "--shm-size=2g",
+                "--expose",
+                "5999",
+                "--expose",
+                "4444",
+                "-p",
+                f"{self.vnc_port}:5999",
+                "-p",
+                f"{self.server_port}:4444",
+                "--name",
+                self.name,
+            ]
+            if self.network != "None":
+                cmd.extend(["--network", self.network])
+            if self.data_dir != "None":
+                cmd.extend(["-v", f"{self.data_dir}:/data:z"])
+            cmd.append(self.image)
+            subprocess.run(cmd)
+            # hack some time to stable
+            time.sleep(2)
 
     def stop(self):
         """Stop selenium container if running"""
-
-        if getattr(self.container, "status", None) == "running":
-            self.container.stop()
+        subprocess.run([self.client, "stop", self.name])
 
     @property
     def status(self):
@@ -103,18 +101,14 @@ class Server(object):
         Get status of selenium container
         :return: container status if running else stopped
         """
-
-        if self.container:
-            return self.container.status
-        else:
-            return "stopped"
+        return "running" if self.is_running else "stopped"
 
 
 @click.command(help="Status of Selenium Server")
 def status():
     """status command"""
 
-    miq = Server()
+    miq = SeleniumContainer()
     click.echo(miq.status)
 
 
@@ -123,8 +117,8 @@ def status():
 def start(ctx):
     """start command"""
 
-    miq = Server()
-    if miq.status == "stopped":
+    miq = SeleniumContainer()
+    if not miq.is_running:
         try:
             miq.start()
             click.echo("Selenium Server started")
@@ -143,8 +137,8 @@ def start(ctx):
 def stop():
     """stop command"""
 
-    miq = Server()
-    if miq.status == "running":
+    miq = SeleniumContainer()
+    if miq.is_running:
         miq.stop()
         click.echo("Selenium Server stopped")
     else:
@@ -155,7 +149,7 @@ def stop():
 def executor():
     """executor url command"""
 
-    miq = Server()
+    miq = SeleniumContainer()
     if miq.status == "running":
         click.echo(miq.executor)
     else:
@@ -166,7 +160,7 @@ def executor():
 def vnc():
     """vnc url command"""
 
-    miq = Server()
+    miq = SeleniumContainer()
     if miq.status == "running":
         click.echo(miq.vnc)
     else:
@@ -181,11 +175,13 @@ def viewer(url):
     :param url: Server url with port <hostname:port>
     """
 
-    url = url if url else Server().vnc
+    url = url if url else SeleniumContainer().vnc
+    try:
+        _viewer = next(v for v in VNC_VIEWERS if shutil.which(v))
+    except StopIteration:
+        click.echo(f"No vnc viewer found. Install one of {VNC_VIEWERS}")
+
     if url:
-        try:
-            Popen(["vncviewer", url], stdout=PIPE)
-        except FileNotFoundError:
-            click.echo("Need vnc viewer... Check README")
+        subprocess.Popen([_viewer, url], stdout=subprocess.PIPE)
     else:
         click.echo("Server not running...")

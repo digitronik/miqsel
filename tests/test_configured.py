@@ -28,7 +28,7 @@ def test_miqsel(state, proj_dir, ensure_stopped):
         assert os.path.isfile(path=env_path)
 
         with open(env_path, "r") as f:
-            assert "command_executor: http://172" in f.read()
+            assert "command_executor: http://localhost:4444/wd/hub" in f.read()
 
     out, _, returncode = miqsel_cmd("miqsel status")
     assert returncode == 0
@@ -76,7 +76,7 @@ def test_executor_url(proj_dir, ensure_stopped):
     miqsel_cmd("miqsel start")
     out, _, returncode = miqsel_cmd("miqsel executor")
     assert returncode == 0
-    assert out.strip() == "http://172.17.0.2:4444/wd/hub"
+    assert out.strip() == "http://localhost:4444/wd/hub"
 
 
 def test_vnc_url(proj_dir, ensure_stopped):
@@ -85,4 +85,4 @@ def test_vnc_url(proj_dir, ensure_stopped):
     miqsel_cmd("miqsel start")
     out, _, returncode = miqsel_cmd("miqsel vnc")
     assert returncode == 0
-    assert out.strip() == "172.17.0.2:5999"
+    assert out.strip() == "localhost:5999"
