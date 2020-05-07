@@ -4,8 +4,8 @@
 <p align="center">
 <a href="https://pypi.org/project/miqsel"><img alt="Python Versions"
 src="https://img.shields.io/pypi/pyversions/miqsel.svg?style=flat"></a>
-<a href="https://travis-ci.org/digitronik/miqsel"><img alt="Build Status"
-src="https://travis-ci.com/digitronik/miqsel.svg?branch=master"></a>
+<a href="https://github.com/digitronik/miqsel/actions?query=workflow%3A%22%F0%9F%95%B5%EF%B8%8F+Test+suite%22"><img alt="Build Status"
+src="https://github.com/digitronik/miqsel/workflows/%F0%9F%95%B5%EF%B8%8F%20Test%20suite/badge.svg"></a>
 <a href="https://github.com/digitronik/miqsel/blob/master/LICENSE"><img alt="License: GPLV3"
 src="https://img.shields.io/pypi/l/miqsel.svg?version=latest"></a>
 <a href="https://pypi.org/project/miqsel/#history"><img alt="PyPI version"

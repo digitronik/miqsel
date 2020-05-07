@@ -1,6 +1,11 @@
-name: miqsel
+name: 🕵️ Test suite
 
-on: push
+on:
+  push:
+  pull_request:
+  schedule:
+    # Run every Friday at 23:59 UTC
+    - cron: 59 23 * * 5
 
 jobs:
   pre-commit:
@@ -13,7 +18,7 @@ jobs:
       - name: Setup python
         uses: actions/setup-python@v1
         with:
-          python-version: '3.7'
+          python-version: '3.8'
           architecture: 'x64'
 
       - name: Pre-Commit Checks
@@ -26,12 +31,12 @@ jobs:
         run: git diff
 
   tests:
-    name: Python-${{ matrix.python-version }}
+    name: 🐍 Python-${{ matrix.python-version }}
     needs: pre-commit
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [ '3.6', '3.7' ]
+        python-version: [ '3.6', '3.7', '3.8' ]
     steps:
       - name: Checkout to master
         uses: actions/checkout@master
