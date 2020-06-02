@@ -40,6 +40,11 @@ class SeleniumContainer(object):
             click.echo(f"Container client {_client} not found")
 
     @property
+    def is_stopped(self):
+        cmd = subprocess.run([self.client, "ps", "-a"], stdout=subprocess.PIPE)
+        return self.name in cmd.stdout.decode()
+
+    @property
     def is_running(self):
         cmd = subprocess.run([self.client, "ps"], stdout=subprocess.PIPE)
         return self.name in cmd.stdout.decode()
@@ -64,7 +69,9 @@ class SeleniumContainer(object):
 
     def start(self, **kwargs):
         """Start selenium container"""
-        if not self.is_running:
+        if self.is_stopped:
+            cmd = [self.client, "start", self.name]
+        elif not self.is_running:
             cmd = [
                 self.client,
                 "run",
@@ -87,9 +94,11 @@ class SeleniumContainer(object):
             if self.data_dir != "None":
                 cmd.extend(["-v", f"{self.data_dir}:/data:z"])
             cmd.append(self.image)
-            subprocess.run(cmd)
-            # hack some time to stable
-            time.sleep(2)
+        else:
+            return
+        subprocess.run(cmd)
+        # hack some time to stable
+        time.sleep(2)
 
     def stop(self):
         """Stop selenium container if running"""
