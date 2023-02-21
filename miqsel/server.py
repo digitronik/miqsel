@@ -11,7 +11,7 @@ CLIENTS = ["podman", "docker"]
 VNC_VIEWERS = ["vncviewer", "vinagre", "xdg-open"]
 
 
-class SeleniumContainer(object):
+class SeleniumContainer:
     """Selenium Server Management"""
 
     def __init__(
@@ -45,6 +45,11 @@ class SeleniumContainer(object):
         return self.name in cmd.stdout.decode()
 
     @property
+    def is_stale(self):
+        cmd = subprocess.run([self.client, "ps", "-a"], stdout=subprocess.PIPE)
+        return self.name in cmd.stdout.decode() and not self.is_running
+
+    @property
     def executor(self):
         """
         Get executor url
@@ -64,6 +69,10 @@ class SeleniumContainer(object):
 
     def start(self, **kwargs):
         """Start selenium container"""
+        if self.is_stale:
+            cmd = [self.client, "rm", self.name]
+            subprocess.run(cmd)
+
         if not self.is_running:
             cmd = [
                 self.client,

@@ -7,7 +7,7 @@ from ruamel.yaml import safe_load
 from miqsel.config import Configuration
 
 
-class LocalEnv(object):
+class LocalEnv:
     """Local env file management"""
 
     def __init__(self):
@@ -15,7 +15,7 @@ class LocalEnv(object):
 
     @property
     def project(self):
-        """ Project directory
+        """Project directory
 
         :return: project directory
         """
@@ -23,7 +23,7 @@ class LocalEnv(object):
 
     @property
     def env_file(self):
-        """ Environment file
+        """Environment file
 
         :return: environment file if not None
         """
@@ -38,7 +38,7 @@ class LocalEnv(object):
 
     @property
     def in_env(self):
-        """ Check we are in env or not.
+        """Check we are in env or not.
         :return: return bool
         """
         proj_dir = os.path.dirname(self.env_file)
@@ -49,11 +49,11 @@ class LocalEnv(object):
 
         :return: dict
         """
-        with open(self.env_file, "r") as ymlfile:
+        with open(self.env_file) as ymlfile:
             return safe_load(ymlfile)
 
     def write(self, cfg):
-        """ Write Environment file
+        """Write Environment file
 
         :param cfg: dict to write
         """
