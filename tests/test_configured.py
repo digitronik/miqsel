@@ -27,7 +27,7 @@ def test_miqsel(state, proj_dir, ensure_stopped):
         # env.local.yaml will create in conf
         assert os.path.isfile(path=env_path)
 
-        with open(env_path, "r") as f:
+        with open(env_path) as f:
             assert "command_executor: http://localhost:4444/wd/hub" in f.read()
 
     out, _, returncode = miqsel_cmd("miqsel status")

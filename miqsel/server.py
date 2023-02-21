@@ -11,7 +11,7 @@ CLIENTS = ["podman", "docker"]
 VNC_VIEWERS = ["vncviewer", "vinagre", "xdg-open"]
 
 
-class SeleniumContainer(object):
+class SeleniumContainer:
     """Selenium Server Management"""
 
     def __init__(
@@ -43,7 +43,7 @@ class SeleniumContainer(object):
     def is_running(self):
         cmd = subprocess.run([self.client, "ps"], stdout=subprocess.PIPE)
         return self.name in cmd.stdout.decode()
-    
+
     @property
     def is_stale(self):
         cmd = subprocess.run([self.client, "ps", "-a"], stdout=subprocess.PIPE)

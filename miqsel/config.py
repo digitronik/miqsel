@@ -5,7 +5,7 @@ from ruamel.yaml import safe_dump
 from ruamel.yaml import safe_load
 
 
-class Configuration(object):
+class Configuration:
     """read write conf yaml files"""
 
     def __init__(self, conf_file=None):
@@ -14,7 +14,7 @@ class Configuration(object):
         )
 
     def read(self):
-        with open(self.conf_file, "r") as ymlfile:
+        with open(self.conf_file) as ymlfile:
             return safe_load(ymlfile)
 
     def write(self, cfg):

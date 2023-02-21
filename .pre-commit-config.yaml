@@ -17,13 +17,13 @@ repos:
     verbose: true
   - id: check-yaml
 - repo: https://github.com/asottile/reorder_python_imports
-  rev: v1.8.0
+  rev: v3.9.0
   hooks:
   - id: reorder-python-imports
     name: Reorder Python Imports
     language_version: python3
 - repo: https://github.com/psf/black
-  rev: 19.10b0
+  rev: 23.1.0
   hooks:
   - id: black
     name: Formate with Black
@@ -31,7 +31,7 @@ repos:
     language_version: python3
     require_serial: true
 - repo: https://github.com/asottile/pyupgrade
-  rev: v1.25.2
+  rev: v3.3.1
   hooks:
   - id: pyupgrade
     name: Python Package Checks
