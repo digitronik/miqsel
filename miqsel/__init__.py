@@ -1,8 +1,6 @@
 import click
 
 from miqsel.config import config
-from miqsel.env import appliance
-from miqsel.env import browser
 from miqsel.server import executor
 from miqsel.server import start
 from miqsel.server import status
@@ -29,9 +27,6 @@ main.add_command(viewer)
 main.add_command(vnc)
 main.add_command(executor)
 
-# Env management command
-main.add_command(appliance)
-main.add_command(browser)
 
 if __name__ == "__main__":
     main()
