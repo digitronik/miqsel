@@ -43,7 +43,8 @@ class SeleniumContainer:
                 _client = next(c for c in CONTAINER_ENGINES if shutil.which(c))
             except StopIteration:
                 click.echo(
-                    f"No container engine found on machine. Install one of {CONTAINER_ENGINES}"
+                    f"No container engine found on machine. "
+                    f"Install one of {CONTAINER_ENGINES}"
                 )
         if shutil.which(_client):
             return _client
@@ -191,7 +192,9 @@ def vnc():
 
 
 @click.command("viewer", help="VNC viewer")
-@click.option("-u", "--url", default=None, help="Server url with port <hostname:port>")
+@click.option(
+    "-u", "--url", default=None, help="Server url with port <hostname:port>"
+)
 def viewer_cmd(url):
     """vnc viewer command
 
