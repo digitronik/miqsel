@@ -70,16 +70,26 @@ def config(reset):
     cfg["engine"] = click.prompt(
         "Container Engine", type=click.Choice(clients), default=cfg["engine"]
     )
-    cfg["image"] = click.prompt("Selenium container image", default=cfg["image"])
+    cfg["image"] = click.prompt(
+        "Selenium container image", default=cfg["image"]
+    )
     viewers = ["auto"] + VNC_VIEWERS
-    cfg["viewer"] = click.prompt("VNC viewer", type=click.Choice(viewers), default=cfg["viewer"])
+    cfg["viewer"] = click.prompt(
+        "VNC viewer", type=click.Choice(viewers), default=cfg["viewer"]
+    )
     cfg["server_port"] = click.prompt(
         "Selenium server running on port?", default=cfg["server_port"]
     )
-    cfg["vnc_port"] = click.prompt("VNC running on port?", default=cfg["vnc_port"])
+    cfg["vnc_port"] = click.prompt(
+        "VNC running on port?", default=cfg["vnc_port"]
+    )
     cfg["name"] = click.prompt("Selenium container name", default=cfg["name"])
-    cfg["network"] = click.prompt("Selenium container network", default=cfg["network"])
-    cfg["shm_size"] = click.prompt("Selenium container shared Memory", default=cfg["shm_size"])
+    cfg["network"] = click.prompt(
+        "Selenium container network", default=cfg["network"]
+    )
+    cfg["shm_size"] = click.prompt(
+        "Selenium container shared Memory", default=cfg["shm_size"]
+    )
     cfg["data_dir"] = click.prompt(
         "Testing data mount to directory '/data'", default=cfg["data_dir"]
     )
