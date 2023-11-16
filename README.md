@@ -16,7 +16,8 @@ src="https://pepy.tech/badge/miqsel"></a>
 src="https://img.shields.io/badge/code%20style-black-000000.svg"></a>
 </p>
 
-Simple command line application to spin [selenium container](http://quay.io/redhatqe/selenium-standalone) and provide `vnc` access.
+`miqsel` is a Python CLI utility leaveraging a Selenium container image to efficiently manage a
+`selenium server` and provide `vnc` access.
 
 
 ### Prerequisite:
@@ -45,36 +46,25 @@ or
 ```
 
 ## Usage:
-
-```shell
-❯❯❯ miqsel --help
-
-Usage: miqsel [OPTIONS] COMMAND [ARGS]...
-
-  Miq Selenium Server
-
-Options:
-  --version  Show the version and exit.
-  --help     Show this message and exit.
-
-Commands:
-  appliance  Appliance
-  browser    Set Browser
-  config     Configure Miq Selenium Server
-  executor   Selenium executor URL
-  start      Start Selenium Server
-  status     Status of Selenium Server
-  stop       Stop Selenium Server
-  viewer     VNC viewer
-  vnc        VNC URL
-```
-
-- **Configuration**:
-If the project directory `not set` then `miqsel` need to run from `integration_tests` project directory.  It will help to manage `env.local.yaml`.
-
+- **Help**:
     ```shell
-    ❯❯❯ miqsel config
-    Miq project working dir: /home/.../integration_tests
+    ❯❯❯ miqsel --help
+    Usage: miqsel [OPTIONS] COMMAND [ARGS]...
+
+      Miq Selenium Server
+
+    Options:
+      --version  Show the version and exit.
+      --help     Show this message and exit.
+
+    Commands:
+      config    Set Configuration
+      executor  Selenium executor URL
+      start     Start Selenium Server
+      status    Status of Selenium Server
+      stop      Stop Selenium Server
+      viewer    VNC viewer
+      vnc       VNC URL
     ```
 
 - **Status**:
@@ -85,7 +75,6 @@ Check status of selenium container (running/ stopped).
     ```
 
 - **Start/Stop**:
-The start will set command executor in `env.local.yaml` and provide `vnc` access.
     ```shell
     ❯❯❯ miqsel start
     Selenium Server started
@@ -98,28 +87,7 @@ The start will set command executor in `env.local.yaml` and provide `vnc` access
      CConn:       End of stream
     Selenium Server stopped
     ```
-
-- **Appliance**:
-Check current appliance or set new.
-    ```shell
-    ❯❯❯ miqsel appliance
-
-    ❯❯❯ miqsel appliance -s 192.168.1.1
-    Appliance set to 192.168.1.1
-    ❯❯❯ miqsel appliance
-    192.168.1.1
-    ```
-
-- **Browser**:
-Check current browser or set other.
-    ```shell
-    ❯❯❯ miqsel browser
-    chrome
-    ❯❯❯ miqsel browser --firefox
-    Browser set to firefox
-    ❯❯❯ miqsel browser
-    firefox
-    ```
+    Note: `start` default invoke `vnc-viewer`. You can stop it like `miqsel start --no-viewer`
 
 - **Viewer**:
 Take `vnc` access of selenium server. At the start of selenium server, vnc viewer will be `invoked` automatically.
@@ -144,4 +112,20 @@ Get vnc session url
     ```shell
     ❯❯❯ miqsel vnc
     172.17.0.2:5999
+    ```
+
+- **Configuration**:
+    Manage your miqsel configuration and change default setting as per need.
+    ```shell
+    ❯❯❯ miqsel config
+    Container Engine (auto, podman, docker) [auto]:
+    Selenium container image [quay.io/redhatqe/selenium-standalone]:
+    VNC viewer (auto, vncviewer, vinagre, xdg-open) [auto]:
+    Selenium server running on port? [4444]:
+    VNC running on port? [5999]:
+    Selenium container name [miqsel_container]:
+    Selenium container network [default]:
+    Selenium container shared Memory [2g]:
+    Testing data mount to directory '/data' [default]:
+    Configuration saved successfully...
     ```
