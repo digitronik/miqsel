@@ -1,0 +1,48 @@
+[build-system]
+requires = [
+    "setuptools>=60",
+    "setuptools-scm>=8.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools_scm]
+
+[project]
+name = "miqsel"
+description = "miqsel is a Python CLI utility leaveraging a Selenium container image to efficiently manage a Selenium server for streamlined testing wrokflows."
+authors = [
+    {name = "Nikhil Dhandre", email = "nik.digitronik@live.com"},
+]
+classifiers = [
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Programming Language :: Python :: Implementation :: PyPy",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+  "Topic :: Software Development :: Quality Assurance",
+  "Topic :: Software Development :: Testing",
+]
+dynamic = ["version"]
+keywords = ["miqsel", "selenium"]
+license = {file = "LICENSE"}
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = ["Click >= 5.0"]
+
+[project.urls]
+repository = "https://github.com/digitronik/miqsel"
+
+[project.optional-dependencies]
+dev = [
+  "pre-commit",
+  "pytest",
+  "pytest-cov",
+]
+
+[project.scripts]
+miqsel = "miqsel:main"
+
+[tool.setuptools.packages.find]
+include = ["miqsel"]
