@@ -9,7 +9,7 @@ assert sys.version_info >= (3, 6, 0), "miqsel requires Python 3.6+"
 with open("README.md") as readme_file:
     readme = readme_file.read()
 
-install_requirements = ["Click>=5.0", "ruamel.yaml~=0.15"]
+install_requirements = ["Click>=5.0"]
 
 setup_requirements = ["setuptools_scm"]
 

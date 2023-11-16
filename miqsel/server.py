@@ -1,39 +1,50 @@
 import shutil
 import subprocess
+import sys
 import time
 
 import click
 
-from miqsel.config import Configuration
-from miqsel.env import LocalEnv
-
-CLIENTS = ["podman", "docker"]
-VNC_VIEWERS = ["vncviewer", "vinagre", "xdg-open"]
+from miqsel.config import _config
+from miqsel.config import CONTAINER_ENGINES
+from miqsel.config import VNC_VIEWERS
 
 
 class SeleniumContainer:
     """Selenium Server Management"""
 
     def __init__(
-        self, image=None, name=None, server_port=None, vnc_port=None, data_dir=None, network=None
+        self,
+        image=None,
+        name=None,
+        server_port=None,
+        vnc_port=None,
+        data_dir=None,
+        network=None,
+        shm_size=None,
+        viewer=None,
     ):
-        self.cfg = Configuration().container
+        self.cfg = _config
         self.image = image or self.cfg["image"]
         self.name = name or self.cfg["name"]
         self.server_port = server_port or self.cfg["server_port"]
         self.vnc_port = vnc_port or self.cfg["vnc_port"]
         self.data_dir = data_dir or self.cfg["data_dir"]
         self.network = network or self.cfg["network"]
+        self.shm_size = shm_size or self.cfg["shm_size"]
+        self.viewer = viewer or self.cfg["viewer"]
 
     @property
     def client(self):
-        _client = self.cfg["client"]
+        _client = self.cfg["engine"]
 
         if _client == "auto":
             try:
-                _client = next(c for c in CLIENTS if shutil.which(c))
+                _client = next(c for c in CONTAINER_ENGINES if shutil.which(c))
             except StopIteration:
-                click.echo(f"No container client found on machine. Install one of {CLIENTS}")
+                click.echo(
+                    f"No container engine found on machine. Install one of {CONTAINER_ENGINES}"
+                )
         if shutil.which(_client):
             return _client
         else:
@@ -79,21 +90,23 @@ class SeleniumContainer:
                 "run",
                 "-d",
                 "--rm",
-                "--shm-size=2g",
+                f"--shm-size={self.shm_size}",
                 "--expose",
-                "5999",
+                str(self.vnc_port),
                 "--expose",
-                "4444",
+                str(self.server_port),
                 "-p",
-                f"{self.vnc_port}:5999",
+                f"{self.vnc_port}:{self.vnc_port}",
                 "-p",
-                f"{self.server_port}:4444",
+                f"{self.server_port}:{self.server_port}",
+                "-e",
+                "SE_VNC_NO_PASSWORD=1",
                 "--name",
                 self.name,
             ]
-            if self.network != "None":
+            if self.network != "default":
                 cmd.extend(["--network", self.network])
-            if self.data_dir != "None":
+            if self.data_dir != "default":
                 cmd.extend(["-v", f"{self.data_dir}:/data:z"])
             cmd.append(self.image)
             subprocess.run(cmd)
@@ -122,8 +135,9 @@ def status():
 
 
 @click.command(help="Start Selenium Server")
+@click.option("--viewer/--no-viewer", default=True)
 @click.pass_context
-def start(ctx):
+def start(ctx, viewer):
     """start command"""
 
     miq = SeleniumContainer()
@@ -131,13 +145,13 @@ def start(ctx):
         try:
             miq.start()
             click.echo("Selenium Server started")
+            if viewer:
+                ctx.invoke(viewer_cmd)
+
         except Exception:
             click.echo("Fail to start Selenium Server")
             raise
-
-        env = LocalEnv()
-        env.executor = miq.executor
-        ctx.invoke(viewer)
+        # ctx.invoke(viewer)
     else:
         click.echo("Server in running state")
 
@@ -176,21 +190,24 @@ def vnc():
         click.echo("Server not running...")
 
 
-@click.command(help="VNC viewer")
+@click.command("viewer", help="VNC viewer")
 @click.option("-u", "--url", default=None, help="Server url with port <hostname:port>")
-def viewer(url):
+def viewer_cmd(url):
     """vnc viewer command
 
     :param url: Server url with port <hostname:port>
     """
+    miq = SeleniumContainer()
 
-    url = url if url else SeleniumContainer().vnc
+    if not miq.is_running:
+        click.echo("Server not running...")
+        sys.exit(1)
+
+    url = url if url else miq.vnc
+
     try:
         _viewer = next(v for v in VNC_VIEWERS if shutil.which(v))
     except StopIteration:
         click.echo(f"No vnc viewer found. Install one of {VNC_VIEWERS}")
 
-    if url:
-        subprocess.Popen([_viewer, url], stdout=subprocess.PIPE)
-    else:
-        click.echo("Server not running...")
+    subprocess.Popen([_viewer, url], stdout=subprocess.PIPE)
