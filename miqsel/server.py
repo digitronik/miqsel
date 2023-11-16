@@ -21,6 +21,7 @@ class SeleniumContainer:
         vnc_port=None,
         data_dir=None,
         network=None,
+        shm_size=None,
         viewer=None,
     ):
         self.cfg = _config
@@ -30,6 +31,7 @@ class SeleniumContainer:
         self.vnc_port = vnc_port or self.cfg["vnc_port"]
         self.data_dir = data_dir or self.cfg["data_dir"]
         self.network = network or self.cfg["network"]
+        self.shm_size = shm_size or self.cfg["shm_size"]
         self.viewer = viewer or self.cfg["viewer"]
 
     @property
@@ -88,7 +90,7 @@ class SeleniumContainer:
                 "run",
                 "-d",
                 "--rm",
-                "--shm-size=2g",
+                f"--shm-size={self.shm_size}",
                 "--expose",
                 str(self.vnc_port),
                 "--expose",
@@ -133,8 +135,9 @@ def status():
 
 
 @click.command(help="Start Selenium Server")
+@click.option("--viewer/--no-viewer", default=True)
 @click.pass_context
-def start(ctx):
+def start(ctx, viewer):
     """start command"""
 
     miq = SeleniumContainer()
@@ -142,6 +145,9 @@ def start(ctx):
         try:
             miq.start()
             click.echo("Selenium Server started")
+            if viewer:
+                ctx.invoke(viewer_cmd)
+
         except Exception:
             click.echo("Fail to start Selenium Server")
             raise
@@ -184,9 +190,9 @@ def vnc():
         click.echo("Server not running...")
 
 
-@click.command(help="VNC viewer")
+@click.command("viewer", help="VNC viewer")
 @click.option("-u", "--url", default=None, help="Server url with port <hostname:port>")
-def viewer(url):
+def viewer_cmd(url):
     """vnc viewer command
 
     :param url: Server url with port <hostname:port>

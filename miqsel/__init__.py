@@ -5,7 +5,7 @@ from miqsel.server import executor
 from miqsel.server import start
 from miqsel.server import status
 from miqsel.server import stop
-from miqsel.server import viewer
+from miqsel.server import viewer_cmd
 from miqsel.server import vnc
 
 
@@ -23,7 +23,7 @@ main.add_command(config)
 main.add_command(status)
 main.add_command(start)
 main.add_command(stop)
-main.add_command(viewer)
+main.add_command(viewer_cmd)
 main.add_command(vnc)
 main.add_command(executor)
 

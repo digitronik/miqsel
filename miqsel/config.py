@@ -1,10 +1,9 @@
+import json
 import os
 import sys
 from pathlib import Path
 
 import click
-from ruamel.yaml import safe_dump
-from ruamel.yaml import safe_load
 
 
 DEFAULT_CONFIG = {
@@ -16,6 +15,7 @@ DEFAULT_CONFIG = {
     "network": "default",
     "server_port": 4444,
     "vnc_port": 5999,
+    "shm_size": "2g",
 }
 CONTAINER_ENGINES = ["podman", "docker"]
 VNC_VIEWERS = ["vncviewer", "vinagre", "xdg-open"]
@@ -36,27 +36,22 @@ class Configuration:
         else:
             config_home = Path.home().joinpath(".config")
 
-        conf_dir = config_home.joinpath("miqsel")
-
-        if not conf_dir.exists():
-            conf_dir.mkdir()
-
-        return conf_dir.joinpath("config.yaml")
+        conf_path = config_home.joinpath("miqsel").joinpath("config.json")
+        conf_path.parent.mkdir(parents=True, exist_ok=True)
+        return conf_path
 
     def read(self):
         if self.config_path.exists():
-            with open(self.config_path) as ymlfile:
-                return safe_load(ymlfile)
+            return json.loads(self.config_path.read_text(encoding="utf-8"))
         else:
             self.write(DEFAULT_CONFIG)
             return DEFAULT_CONFIG
 
-    def write(self, cfg):
-        with open(self.config_path, "w") as ymlfile:
-            return safe_dump(cfg, ymlfile, default_flow_style=True)
+    def write(self, cfg: dict):
+        self.config_path.write_text(json.dumps(cfg), encoding="utf-8")
 
 
-@click.command(help="Configure Selenium Server")
+@click.command(help="Set Configuration")
 @click.option("--reset", is_flag=True, help="Reset configuration to default.")
 def config(reset):
     """Config command"""
@@ -82,8 +77,9 @@ def config(reset):
         "Selenium server running on port?", default=cfg["server_port"]
     )
     cfg["vnc_port"] = click.prompt("VNC running on port?", default=cfg["vnc_port"])
-    cfg["name"] = click.prompt("Container name", default=cfg["name"])
-    cfg["network"] = click.prompt("Container network", default=cfg["network"])
+    cfg["name"] = click.prompt("Selenium container name", default=cfg["name"])
+    cfg["network"] = click.prompt("Selenium container network", default=cfg["network"])
+    cfg["shm_size"] = click.prompt("Selenium container shared Memory", default=cfg["shm_size"])
     cfg["data_dir"] = click.prompt(
         "Testing data mount to directory '/data'", default=cfg["data_dir"]
     )
