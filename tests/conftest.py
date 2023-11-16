@@ -33,15 +33,15 @@ def proj_dir():
         shutil.rmtree("conf")
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="function")
 def ensure_stopped():
     out, _, _ = miqsel_cmd("miqsel status")
     if out.strip() == "running":
         miqsel_cmd("miqsel stop")
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="function")
 def ensure_running():
     out, _, _ = miqsel_cmd("miqsel status")
     if out.strip() != "running":
-        miqsel_cmd("miqsel start")
+        miqsel_cmd("miqsel start --no-viewer")
