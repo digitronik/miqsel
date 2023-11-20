@@ -119,7 +119,7 @@ Get vnc session url
     ```shell
     ❯❯❯ miqsel config
     Container Engine (auto, podman, docker) [auto]:
-    Selenium container image [quay.io/redhatqe/selenium-standalone]:
+    Selenium container image [selenium/standalone-chrome:latest]:
     VNC viewer (auto, vncviewer, vinagre, xdg-open) [auto]:
     Selenium server running on port? [4444]:
     VNC running on port? [5999]:
@@ -129,3 +129,5 @@ Get vnc session url
     Testing data mount to directory '/data' [default]:
     Configuration saved successfully...
     ```
+
+    `selenium/standalone-chrome:latest` is default image. You can use other from [SeleniumHQ](https://github.com/SeleniumHQ/docker-selenium) or custom images.

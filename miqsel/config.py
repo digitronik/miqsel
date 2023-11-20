@@ -10,7 +10,7 @@ DEFAULT_CONFIG = {
     "engine": "auto",
     "viewer": "auto",
     "data_dir": "default",
-    "image": "quay.io/redhatqe/selenium-standalone",
+    "image": "selenium/standalone-chrome:latest",
     "name": "miqsel_container",
     "network": "default",
     "server_port": 4444,
